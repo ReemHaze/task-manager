@@ -1,6 +1,6 @@
 import TaskItem from './TaskItem';
 
-function TaskList({ tasks, onToggle, onDelete, onEdit }) {
+function TaskList({ tasks = [], onToggle, onDelete, onEdit }) {
   if (tasks.length === 0) {
     return (
       <p className="text-center text-gray-400 py-8 text-sm">

@@ -45,13 +45,13 @@ Run npm install then npm run dev, and open the local URL shown in the terminal.
 ## Screenshots
 
 ### Light mode
-![Light mode](./screenshots/screenshot-light.png)
+![Light mode](./Screenshot-light.png)
 
 ### Dark mode
-![Dark mode](./screenshots/screenshot-dark.png)
+![Dark mode](./Screenshot-dark.png)
 
 ### Mobile view
-![Mobile view](./screenshots/screenshot-mobile.png)
+![Mobile view](./Screenshot-mobile.png)
 # Task Manager
 
 **Live demo:** https://task-manager-khaki-kappa-18.vercel.app/

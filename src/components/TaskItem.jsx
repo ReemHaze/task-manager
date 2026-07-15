@@ -17,8 +17,8 @@ function TaskItem({ task, onToggle, onDelete, onEdit }) {
           type="checkbox"
           checked={task.completed}
           onChange={() => onToggle(task.id)}
-          className="w-4 h-4 accent-primary-500 cursor-pointer"
-        />
+          aria-label={task.completed ? `Mark "${task.title}" as active` : `Mark "${task.title}" as complete`}
+           className="w-4 h-4 accent-brand-600 cursor-pointer"        />
         <div className="min-w-0">
           {isEditing ? (
             <input
@@ -60,9 +60,9 @@ function TaskItem({ task, onToggle, onDelete, onEdit }) {
       <button
         onClick={() => {
           if (window.confirm(`Delete "${task.title}"? This can't be undone.`)) {
-            onDelete(task.id);
-          }
+        onDelete(task.id, task.title);          }
         }}
+        aria-label={`Delete "${task.title}"`}
         className="text-red-500 hover:text-red-700 text-sm font-medium transition-colors"
       >
         Delete

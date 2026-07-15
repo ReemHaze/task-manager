@@ -42,3 +42,17 @@ Run npm install then npm run dev, and open the local URL shown in the terminal.
 - Drag-and-drop reordering
 - Tags/categories
 - Export to JSON/CSV
+## Screenshots
+
+### Light mode
+![Light mode](./screenshots/screenshot-light.png)
+
+### Dark mode
+![Dark mode](./screenshots/screenshot-dark.png)
+
+### Mobile view
+![Mobile view](./screenshots/screenshot-mobile.png)
+# Task Manager
+
+**Live demo:** https://task-manager-khaki-kappa-18.vercel.app/
+**Repository:** https://github.com/ReemHaze/task-manager

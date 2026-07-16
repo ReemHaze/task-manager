@@ -36,7 +36,8 @@ function useTasks() {
       )
     );
   }
-
+ const totalCount = tasks.length;
+  const completedCount = tasks.filter((t) => t.completed).length;
   const filteredTasks = tasks
     .filter((task) => {
       if (filter === 'active') return !task.completed;
@@ -49,18 +50,20 @@ function useTasks() {
     return b.createdAt - a.createdAt;
   });
  return {
-  tasks: filteredTasks,
-  filter,
-  setFilter,
-  searchTerm,
-  setSearchTerm,
-  sortBy,
-  setSortBy,
-  addTask,
-  toggleTask,
-  deleteTask,
-  editTask,
-};
+    tasks: filteredTasks,
+    totalCount,
+    completedCount,
+    filter,
+    setFilter,
+    searchTerm,
+    setSearchTerm,
+    sortBy,
+    setSortBy,
+    addTask,
+    toggleTask,
+    deleteTask,
+    editTask,
+  };
 }
 
 export default useTasks;

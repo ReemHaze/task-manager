@@ -1,43 +1,94 @@
-import { useState } from 'react';
-import useLocalStorage from './useLocalStorage';
-
+import { useState, useEffect } from 'react';
+import { fetchTodos, addTodoApi, updateTodoApi, deleteTodoApi } from '../services/todosApi';
 function useTasks() {
-  const [tasks, setTasks] = useLocalStorage('tasks', []);
+  const [tasks, setTasks] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('date'); 
-  function addTask(title, description) {
+  const [sortBy, setSortBy] = useState('date');
+
+  useEffect(() => {
+    async function loadTasks() {
+      try {
+        const todos = await fetchTodos();
+        const mapped = todos.map((t) => ({
+          id: t.id,
+          title: t.todo,
+          description: '',
+          completed: t.completed,
+          createdAt: Date.now(),
+        }));
+        setTasks(mapped);
+      } catch (error) {
+        console.error('Failed to load todos:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadTasks();
+  }, []);
+
+  async function addTask(title, description) {
+    const tempId = crypto.randomUUID();
     const newTask = {
-      id: crypto.randomUUID(),
+      id: tempId,
       title,
       description,
       completed: false,
       createdAt: Date.now(),
     };
-    setTasks((prevTasks) => [...prevTasks, newTask]);
+    setTasks((prevTasks) => [newTask, ...prevTasks]);
+
+    try {
+      await addTodoApi(title);
+    } catch (error) {
+      console.error('Failed to add todo on server:', error);
+    }
   }
 
-  function toggleTask(id) {
+  async function toggleTask(id) {
+    const task = tasks.find((t) => t.id === id);
+    if (!task) return;
+
     setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
+      prevTasks.map((t) =>
+        t.id === id ? { ...t, completed: !t.completed } : t
       )
     );
+
+    try {
+      await updateTodoApi(id, { completed: !task.completed });
+    } catch (error) {
+      console.error('Failed to update todo on server:', error);
+    }
   }
 
-  function deleteTask(id) {
-    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+  async function deleteTask(id) {
+    setTasks((prevTasks) => prevTasks.filter((t) => t.id !== id));
+
+    try {
+      await deleteTodoApi(id);
+    } catch (error) {
+      console.error('Failed to delete todo on server:', error);
+    }
   }
 
-  function editTask(id, newData) {
+  async function editTask(id, newData) {
     setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === id ? { ...task, ...newData } : task
-      )
+      prevTasks.map((t) => (t.id === id ? { ...t, ...newData } : t))
     );
+
+    try {
+      await updateTodoApi(id, { todo: newData.title });
+    } catch (error) {
+      console.error('Failed to edit todo on server:', error);
+    }
   }
- const totalCount = tasks.length;
+
+  const totalCount = tasks.length;
   const completedCount = tasks.filter((t) => t.completed).length;
+
   const filteredTasks = tasks
     .filter((task) => {
       if (filter === 'active') return !task.completed;
@@ -45,14 +96,16 @@ function useTasks() {
       return true;
     })
     .filter((task) => task.title.toLowerCase().includes(searchTerm.toLowerCase()))
-  .sort((a, b) => {
-    if (sortBy === 'alphabetical') return a.title.localeCompare(b.title);
-    return b.createdAt - a.createdAt;
-  });
- return {
+    .sort((a, b) => {
+      if (sortBy === 'alphabetical') return a.title.localeCompare(b.title);
+      return b.createdAt - a.createdAt;
+    });
+
+  return {
     tasks: filteredTasks,
     totalCount,
     completedCount,
+    isLoading,
     filter,
     setFilter,
     searchTerm,

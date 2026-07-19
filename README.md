@@ -13,8 +13,7 @@ A personal task manager built with React, Tailwind CSS, and localStorage.
 - Sort by newest first or alphabetically
 - Progress bar showing how many tasks are completed
 - Dark / light theme toggle, remembered across visits
-- Tasks persist in the browser using localStorage
-- Error boundary so a crash shows a recovery message instead of a blank page
+- Tasks are loaded from and synced with the DummyJSON Todos REST API (GET, POST, PUT, DELETE)- Error boundary so a crash shows a recovery message instead of a blank page
 - Toast messages confirming when a task is added or deleted
 
 ## Tech stack
@@ -22,6 +21,7 @@ A personal task manager built with React, Tailwind CSS, and localStorage.
 - React (functional components + hooks)
 - Vite
 - Tailwind CSS
+- DummyJSON (external REST API for todos)
 
 ### Custom hooks
 
@@ -37,6 +37,7 @@ Run npm install then npm run dev, and open the local URL shown in the terminal.
 
 - Tasks are stored per-browser, no account system or sync across devices
 - No due dates, tags, or drag-and-drop reordering yet
+- The DummyJSON API is a mock/fake REST API — it doesn't actually persist changes on the server. Add/edit/delete/complete actions update the screen immediately and are sent to the API correctly, but refreshing the page reloads the original sample data from the server rather than your changes.
 
 ## Future enhancements
 

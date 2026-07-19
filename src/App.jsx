@@ -10,8 +10,7 @@ import SortSearchBar from './components/SortSearchBar';
 
 
 function App() {
-  const { tasks, totalCount, completedCount, filter, setFilter, searchTerm, setSearchTerm, sortBy, setSortBy, addTask, toggleTask, deleteTask, editTask } = useTasks();
-  const { theme, toggleTheme } = useTheme();
+const { tasks, totalCount, completedCount, isLoading, filter, setFilter, searchTerm, setSearchTerm, sortBy, setSortBy, addTask, toggleTask, deleteTask, editTask } = useTasks();  const { theme, toggleTheme } = useTheme();
   const [toastMessage, setToastMessage] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -46,12 +45,18 @@ function App() {
 
         <TaskForm onAddTask={handleAdd} />
 
-        <TaskList
-          tasks={tasks}
-          onToggle={toggleTask}
-          onDelete={handleDelete}
-          onEdit={editTask}
-        />
+        {isLoading ? (
+          <p className="text-center text-gray-400 py-8 text-sm">
+            Loading tasks...
+          </p>
+        ) : (
+          <TaskList
+            tasks={tasks}
+            onToggle={toggleTask}
+            onDelete={handleDelete}
+            onEdit={editTask}
+          />
+        )}
       </div>
 
       <Toast message={toastMessage} onDismiss={() => setToastMessage('')} />

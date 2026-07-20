@@ -1,7 +1,7 @@
 const BASE_URL = 'https://dummyjson.com/todos';
 
 export async function fetchTodos() {
-  const res = await fetch(`${BASE_URL}?limit=10`);
+  const res = await fetch(`${BASE_URL}?limit=0`);
   const data = await res.json();
   return data.todos;
 }

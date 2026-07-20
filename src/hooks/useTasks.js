@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react';
 import { fetchTodos, addTodoApi, updateTodoApi, deleteTodoApi } from '../services/todosApi';
 function useTasks() {
+  const STORAGE_KEY = 'tasks';
   const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('date');
+  function isServerTask(id) {
+  return typeof id === 'number';
+}
 
   useEffect(() => {
     async function loadTasks() {
@@ -57,20 +61,25 @@ function useTasks() {
       )
     );
 
-    try {
-      await updateTodoApi(id, { completed: !task.completed });
-    } catch (error) {
-      console.error('Failed to update todo on server:', error);
+    if (isServerTask(id)) {
+      try {
+        await updateTodoApi(id, { completed: !task.completed });
+      } catch (error) {
+        console.error('Failed to update todo on server:', error);
+      }
     }
+  
   }
 
   async function deleteTask(id) {
     setTasks((prevTasks) => prevTasks.filter((t) => t.id !== id));
 
-    try {
-      await deleteTodoApi(id);
-    } catch (error) {
-      console.error('Failed to delete todo on server:', error);
+    if (isServerTask(id)) {
+      try {
+        await deleteTodoApi(id);
+      } catch (error) {
+        console.error('Failed to delete todo on server:', error);
+      }
     }
   }
 
@@ -79,10 +88,12 @@ function useTasks() {
       prevTasks.map((t) => (t.id === id ? { ...t, ...newData } : t))
     );
 
-    try {
-      await updateTodoApi(id, { todo: newData.title });
-    } catch (error) {
-      console.error('Failed to edit todo on server:', error);
+    if (isServerTask(id)) {
+      try {
+        await updateTodoApi(id, { todo: newData.title });
+      } catch (error) {
+        console.error('Failed to edit todo on server:', error);
+      }
     }
   }
 

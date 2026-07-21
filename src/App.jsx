@@ -51,7 +51,7 @@ function App() {
         ) : (
           <div className="bg-white dark:bg-surface-dark rounded-2xl p-3 shadow-sm">
             <div className="max-h-[420px] overflow-y-auto pr-1">
-              <TaskList
+             <TaskList
                 tasks={tasks}
                 onToggle={toggleTask}
                 onDelete={handleDelete}

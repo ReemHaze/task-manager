@@ -95,10 +95,18 @@ function TaskItem({ task, onToggle, onDelete, onEdit, isDraggable }) {
     <li
       ref={setNodeRef}
       style={dragStyle}
-      {...(isDraggable ? attributes : {})}
-      {...(isDraggable ? listeners : {})}
       className={`flex items-center gap-3 bg-white dark:bg-surface-dark rounded-2xl p-4 group ${isDraggable ? 'cursor-grab active:cursor-grabbing' : ''}`}
     >
+      {isDraggable && (
+        <span
+          {...attributes}
+          {...listeners}
+          className="text-gray-300 dark:text-gray-600 cursor-grab active:cursor-grabbing flex-shrink-0 select-none"
+        >
+          ⠿
+        </span>
+      )}
+
       <button
         onClick={() => onToggle(task.id)}
         aria-label={task.completed ? `Mark "${task.title}" as active` : `Mark "${task.title}" as complete`}

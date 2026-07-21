@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { fetchTodos, addTodoApi, updateTodoApi, deleteTodoApi } from '../services/todosApi';
 
-const STORAGE_KEY = 'tasks';
-
 function isServerTask(id) {
   return typeof id === 'number';
 }
@@ -17,21 +15,15 @@ function useTasks() {
   useEffect(() => {
     async function loadTasks() {
       try {
-        const saved = localStorage.getItem(STORAGE_KEY);
-
-        if (saved) {
-          setTasks(JSON.parse(saved));
-        } else {
-          const todos = await fetchTodos();
-          const mapped = todos.map((t) => ({
-            id: t.id,
-            title: t.todo,
-            description: '',
-            completed: t.completed,
-            createdAt: Date.now(),
-          }));
-          setTasks(mapped);
-        }
+        const todos = await fetchTodos();
+        const mapped = todos.map((t) => ({
+          id: t.id,
+          title: t.todo,
+          description: '',
+          completed: t.completed,
+          createdAt: Date.now(),
+        }));
+        setTasks(mapped);
       } catch (error) {
         console.error('Failed to load todos:', error);
       } finally {
@@ -41,12 +33,6 @@ function useTasks() {
 
     loadTasks();
   }, []);
-
-  useEffect(() => {
-    if (!isLoading) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-    }
-  }, [tasks, isLoading]);
 
   async function addTask(title, description) {
     const tempId = crypto.randomUUID();
@@ -130,6 +116,7 @@ function useTasks() {
       if (sortBy === 'alphabetical') return a.title.localeCompare(b.title);
       return b.createdAt - a.createdAt;
     });
+
   return {
     tasks: filteredTasks,
     totalCount,

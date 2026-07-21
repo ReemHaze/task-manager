@@ -21,7 +21,10 @@ function TaskItem({ task, onToggle, onDelete, onEdit, isDraggable }) {
   };
 
   function handleSave() {
-    if (editTitle.trim() === '') return;
+    if (editTitle.trim() === '') {
+      setNoChangeMessage('Please enter a task title');
+      return;
+    }
 
     const titleUnchanged = editTitle.trim() === task.title;
     const descriptionUnchanged = editDescription.trim() === (task.description || '');
@@ -34,6 +37,8 @@ function TaskItem({ task, onToggle, onDelete, onEdit, isDraggable }) {
     onEdit(task.id, { title: editTitle, description: editDescription });
     setIsEditing(false);
   }
+
+    
 
   function handleCancel() {
     setEditTitle(task.title);

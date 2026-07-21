@@ -4,11 +4,17 @@ function TaskForm({ onAddTask }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
+ const [error, setError] = useState('');
+
   function handleSubmit(e) {
     e.preventDefault();
 
-    if (title.trim() === '') return;
+    if (title.trim() === '') {
+      setError('Please enter a task title');
+      return;
+    }
 
+    setError('');
     onAddTask(title, description);
 
     setTitle('');
@@ -23,9 +29,17 @@ function TaskForm({ onAddTask }) {
         type="text"
         placeholder="Task title"
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        className="border rounded px-3 py-2 text-sm dark:bg-gray-700 dark:text-white dark:border-gray-600"
+        onChange={(e) => {
+          setTitle(e.target.value);
+          if (error) setError('');
+        }}
+        className={`border rounded px-3 py-2 text-sm dark:bg-gray-700 dark:text-white dark:border-gray-600 ${
+          error ? 'border-red-400' : ''
+        }`}
       />
+      {error && (
+        <p className="text-xs text-red-500 -mt-1">{error}</p>
+      )}
 
       <label htmlFor="task-description" className="sr-only">Description (optional)</label>
       <textarea

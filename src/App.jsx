@@ -8,11 +8,10 @@ import FilterBar from './components/FilterBar';
 import Header from './components/Header';
 import SortSearchBar from './components/SortSearchBar';
 
-
 function App() {
-const { tasks, totalCount, completedCount, isLoading, filter, setFilter, searchTerm, setSearchTerm, sortBy, setSortBy, addTask, toggleTask, deleteTask, editTask } = useTasks();  const { theme, toggleTheme } = useTheme();
+  const { tasks, totalCount, completedCount, isLoading, filter, setFilter, searchTerm, setSearchTerm, sortBy, setSortBy, addTask, toggleTask, deleteTask, editTask, reorderTasks } = useTasks();
+  const { theme, toggleTheme } = useTheme();
   const [toastMessage, setToastMessage] = useState('');
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   function handleAdd(title, description) {
     addTask(title, description);
@@ -50,12 +49,21 @@ const { tasks, totalCount, completedCount, isLoading, filter, setFilter, searchT
             Loading tasks...
           </p>
         ) : (
-          <TaskList
-            tasks={tasks}
-            onToggle={toggleTask}
-            onDelete={handleDelete}
-            onEdit={editTask}
-          />
+          <div className="bg-white dark:bg-surface-dark rounded-2xl p-3 shadow-sm">
+            <div className="max-h-[420px] overflow-y-auto pr-1">
+              <TaskList
+                tasks={tasks}
+                onToggle={toggleTask}
+                onDelete={handleDelete}
+                onEdit={editTask}
+                onReorder={(newOrder) => {
+                  reorderTasks(newOrder);
+                  setSortBy('manual');
+                }}
+                isDraggable={true}
+              />
+            </div>
+          </div>
         )}
       </div>
 

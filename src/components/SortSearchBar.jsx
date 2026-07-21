@@ -16,6 +16,7 @@ function SortSearchBar({ searchTerm, onSearchChange, sortBy, onSortChange }) {
       >
         <option value="date">Newest first</option>
         <option value="alphabetical">A-Z</option>
+        <option value="manual">Manual (drag to reorder)</option>
       </select>
     </div>
   );

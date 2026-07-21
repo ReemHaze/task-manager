@@ -1,12 +1,24 @@
 import { useState } from 'react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import ConfirmModal from './ConfirmModal';
 
-function TaskItem({ task, onToggle, onDelete, onEdit }) {
+function TaskItem({ task, onToggle, onDelete, onEdit, isDraggable }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(task.title);
   const [editDescription, setEditDescription] = useState(task.description);
   const [noChangeMessage, setNoChangeMessage] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+    id: task.id,
+    disabled: !isDraggable,
+  });
+
+  const dragStyle = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
 
   function handleSave() {
     if (editTitle.trim() === '') return;
@@ -80,7 +92,13 @@ function TaskItem({ task, onToggle, onDelete, onEdit }) {
 
   return (
     <>
-    <li className="flex items-center gap-3 bg-white dark:bg-surface-dark rounded-2xl p-4 group">
+    <li
+      ref={setNodeRef}
+      style={dragStyle}
+      {...(isDraggable ? attributes : {})}
+      {...(isDraggable ? listeners : {})}
+      className={`flex items-center gap-3 bg-white dark:bg-surface-dark rounded-2xl p-4 group ${isDraggable ? 'cursor-grab active:cursor-grabbing' : ''}`}
+    >
       <button
         onClick={() => onToggle(task.id)}
         aria-label={task.completed ? `Mark "${task.title}" as active` : `Mark "${task.title}" as complete`}
